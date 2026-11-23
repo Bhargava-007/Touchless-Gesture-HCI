@@ -1,0 +1,10 @@
+# Runtime dependencies (install PyTorch separately with CUDA 12.8:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128)
+mediapipe==1.2.3
+numpy==2.5.5
+opencv-python==5.1.0.95
+pyyaml==6.0.4
+pandas==3.1.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+pyautogui==0.9.54
