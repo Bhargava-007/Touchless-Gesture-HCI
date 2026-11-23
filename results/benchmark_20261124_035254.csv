@@ -1,0 +1,9 @@
+device,batch_size,iterations,mean_ms,median_ms,p95_ms,p99_ms,throughput_samples_per_s,torch_version,cuda_version,gpu_name,cpu_name,weights_note,timestamp,git_commit
+cpu,1,1000,0.0274,0.0272,0.0278,0.0314,36554.9,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cpu,8,1000,0.0357,0.0333,0.0464,0.0605,224232.2,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cpu,64,1000,0.0527,0.0471,0.0694,0.0971,1214405.1,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cpu,512,1000,0.1197,0.1168,0.1514,0.1913,4278128.5,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cuda,1,1000,0.1162,0.1057,0.1580,0.1972,8606.3,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cuda,8,1000,0.1242,0.1056,0.1529,0.2490,64409.3,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cuda,64,1000,0.1412,0.1323,0.1923,0.2208,453359.6,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
+cuda,512,1000,0.1302,0.1233,0.1680,0.2111,3933369.3,2.11.0+cu128,12.8,NVIDIA GeForce RTX 5050 Laptop GPU,"AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",random_init,20261124_035254,85d563b40a5a6e710d8102e8327ced4daec8f971
