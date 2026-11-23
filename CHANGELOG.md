@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-24
+### Added
+- `tghci.collect` interactive webcam landmark recorder writing per-session CSVs to `data/raw/`.
+- `tghci.dataset` session loader, schema validator, strict session-based train/val/test splitter (requires >= 3 sessions), and `LandmarkDataset` with mirror + jitter augmentation.
+- Team recording protocol and privacy note in `docs/DATA.md`, plus synthetic CSV tests in `tests/test_data.py`.
+
 ## [0.2.0] - 2026-11-24
 ### Added
 - `tghci.tracker.HandTracker` wrapper around MediaPipe `HandLandmarker` (`VIDEO` and `IMAGE` modes) plus graceful `open_camera`.
