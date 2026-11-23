@@ -1,11 +1,11 @@
 # Human Handoff
 
 ## Current State
-- **Phase 2 (`v0.2.0`)**: `HandTracker` (`VIDEO`/`IMAGE` modes) and 68-D landmark feature normalisation implemented and verified on synthetic inputs.
+- **Phase 3 (`v0.3.0`)**: Session-tagged webcam data collector (`tghci.collect`) and session-based dataset loader/splitter (`tghci.dataset`) implemented and verified on synthetic CSVs.
 
 ## Verified vs Not Verified
-- **Verified:** PyTorch CUDA matmul + 5-step `nn.Linear` training on RTX 5050 (`sm_120`); `mediapipe.tasks.python.vision.HandLandmarker` (`1.2.3`); `hand_landmarker.task` SHA256; feature invariance, mirroring, NaN/no-hand handling, and camera probe smoke test (`pytest`, `ruff`).
-- **Not Yet Implemented / Verified:** Phases 3–8 (data collection, classifier training, swipe/actions, live app, benchmark, evaluation).
+- **Verified:** PyTorch CUDA matmul + 5-step `nn.Linear` training on RTX 5050 (`sm_120`); MediaPipe `HandLandmarker` (`1.2.3`); 68-D feature normalisation; session CSV schema validation, zero-leakage session split, and `< 3` session guard (`pytest`, `ruff`).
+- **Not Yet Implemented / Verified:** Phases 4–8 (classifier training, swipe/actions, live app, benchmark, evaluation); **Human Gate 1** (real webcam data collection).
 
 ## Human Gates (Pending)
 1. **Human Gate 1 — Real Data Collection (Phase 3):** Record multi-session webcam landmark data (`python -m tghci.collect`).
