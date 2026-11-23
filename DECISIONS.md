@@ -10,10 +10,10 @@
 - **Decision:** Use PyTorch with CUDA (`cu128` wheel) instead of TensorFlow, because TensorFlow dropped native-Windows GPU support after 2.10.
 - **Consequences:** Native Windows 11 CUDA execution works without WSL2 or Docker, and `sm_120` is supported on recent PyTorch CUDA 12.8+ builds.
 
-## ADR-003: MediaPipe Tasks `HandLandmarker` API
+## ADR-003: MediaPipe Tasks `HandLandmarker` API (VIDEO / IMAGE Modes)
 - **Context:** Recent `mediapipe` releases (`>=1.2`) removed the legacy `mediapipe.solutions` namespace.
-- **Decision:** Use `mediapipe.tasks.python.vision.HandLandmarker` with the official `hand_landmarker.task` float16 model bundle.
-- **Consequences:** Compatible with modern MediaPipe on Python 3.13; requires downloading `hand_landmarker.task` into `models/` (gitignored).
+- **Decision:** Use `mediapipe.tasks.python.vision.HandLandmarker` with the official `hand_landmarker.task` float16 model bundle, defaulting to `VIDEO` mode for sequential webcam/video frames (temporal tracking) and supporting `IMAGE` mode for independent still frames.
+- **Consequences:** Compatible with modern MediaPipe on Python 3.13; requires downloading `hand_landmarker.task` into `models/` (gitignored) and passing monotonic `timestamp_ms` in `VIDEO` mode.
 
 ## ADR-004: Explicit `neutral` Gesture Class
 - **Context:** During live webcam use, the user's hand is often visible in relaxed or transitional poses that are not intended as commands.

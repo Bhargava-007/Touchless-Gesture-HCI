@@ -9,5 +9,23 @@
 ## Dynamic Heuristic Gestures
 - `swipe_left` / `swipe_right`: Detected by `tghci.swipe` from rapid horizontal displacement of the hand centre over a short frame window.
 
-## Feature Normalisation Formula
-Detailed formula and auxiliary distance ratios will be finalised and documented in Phase 2 (`feat/landmarks`).
+## Feature Normalisation Formula (`tghci.features`)
+Given raw 3D landmarks $P \in \mathbb{R}^{21 \times 3}$:
+
+1. **Wrist-origin translation:**
+   $$P' = P - P_0$$
+   where $P_0$ is the wrist landmark (index `0`).
+2. **Left-hand mirroring (when `handedness == "Left"` and `mirror_left_hand=True`):**
+   $$P'_x \leftarrow -P'_x$$
+3. **Scale normalisation:**
+   $$s = \max\left(\|P'_9\|_2,\ \epsilon\right), \quad \hat{P} = \frac{P'}{s}$$
+   where $P'_9$ is the middle-finger MCP landmark (index `9`) and $\epsilon = 10^{-6}$ (falling back to $\max_i \|P'_i\|_2$ if $\|P'_9\|_2 < \epsilon$).
+4. **Flattened base vector:** $\hat{P}.\text{reshape}(63)$ (`float32`).
+5. **Auxiliary distance features (5 values, `float32`):**
+   - $\|\hat{P}_4 - \hat{P}_8\|_2$ (thumb-index tip distance, pinch cue)
+   - $\|\hat{P}_4 - \hat{P}_{12}\|_2$ (thumb-middle tip distance)
+   - $\|\hat{P}_8\|_2$ (index tip to wrist)
+   - $\|\hat{P}_{12}\|_2$ (middle tip to wrist)
+   - $\|\hat{P}_{20}\|_2$ (pinky tip to wrist)
+
+Total feature dimension: $63 + 5 = 68$ (`float32`).
