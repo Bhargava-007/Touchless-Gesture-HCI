@@ -20,10 +20,12 @@ logs/
 checkpoints/
 *.pt
 *.pth
+models/*.task
 
 # Raw data and generated plots (keep docs/, data/processed/, results/*.csv)
 data/raw/
 results/*.png
+results/figures/*.png
 
 # Environment and OS files
 .env
