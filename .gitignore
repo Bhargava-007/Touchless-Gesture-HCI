@@ -1,0 +1,31 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python caches and packaging
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Notebooks and IDEs
+.ipynb_checkpoints/
+.idea/
+.vscode/
+
+# Logs, checkpoints, and weights
+*.log
+logs/
+checkpoints/
+*.pt
+*.pth
+
+# Raw data and generated plots (keep docs/, data/processed/, results/*.csv)
+data/raw/
+results/*.png
+
+# Environment and OS files
+.env
+Thumbs.db
+.DS_Store
