@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-24
+### Added
+- Complete `README.md` with setup, CLI usage, safety controls, and honest verification status.
+- Official resource references in `docs/ARCHITECTURE.md` and final human handoff checklist in `HANDOFF.md`.
+
 ## [0.7.0] - 2026-11-24
 ### Added
 - `tghci.benchmark` CPU vs CUDA inference latency benchmark with warmup, `torch.cuda.synchronize()`, and CSV export (`results/benchmark_20261124_035254.csv`).

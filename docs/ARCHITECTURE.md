@@ -24,5 +24,9 @@ flowchart LR
 - `tghci.model` & `tghci.train`: Configurable PyTorch MLP classifier, deterministic training, early stopping, and checkpoint metadata.
 - `tghci.swipe`: Sliding-window trajectory heuristic for left/right swipe detection.
 - `tghci.actions`: Disarmed-by-default, debounced, cooldown-gated OS action mapper with dry-run mode.
-- `tghci.overlay` & `tghci.app`: Real-time HUD rendering and webcam loop.
+- `tghci.app` & `tghci.overlay`: Real-time HUD rendering and webcam loop.
 - `tghci.benchmark` & `tghci.evaluate`: CPU vs GPU latency benchmarking and held-out session evaluation.
+
+## References Used
+- MediaPipe Hand Landmarker float16 model asset: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`
+- PyTorch CUDA 12.8 wheel index: `https://download.pytorch.org/whl/cu128`
