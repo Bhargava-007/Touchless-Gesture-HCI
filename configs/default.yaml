@@ -1,0 +1,74 @@
+# Default configuration for Hand Gesture Recognition for Touchless Interfaces
+
+paths:
+  hand_model: "models/hand_landmarker.task"
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  checkpoint_path: "models/gesture_mlp.pt"
+  train_log_csv: "results/train_log.csv"
+  results_dir: "results"
+  figures_dir: "results/figures"
+
+camera:
+  device_index: 0
+  width: 640
+  height: 480
+  fps: 30
+
+tracker:
+  num_hands: 1
+  min_hand_detection_confidence: 0.5
+  min_hand_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+  running_mode: "VIDEO"
+
+features:
+  mirror_left_hand: true
+  include_auxiliary: true
+  # 21 landmarks * 3 (x, y, z) = 63 base features + 5 auxiliary distance ratios = 68
+  num_base_features: 63
+  num_aux_features: 5
+
+labels:
+  - "open_palm"
+  - "fist"
+  - "pinch"
+  - "neutral"
+
+model:
+  hidden_dims: [128, 64]
+  dropout: 0.2
+
+training:
+  epochs: 80
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  early_stopping_patience: 12
+  val_fraction: 0.2
+  test_fraction: 0.2
+  mirror_augment: true
+  jitter_std: 0.01
+  seed: 42
+
+swipe:
+  window_size: 8
+  min_travel_norm: 0.18
+  min_velocity_norm: 0.45
+  max_vertical_ratio: 0.6
+  refractory_seconds: 0.8
+
+actions:
+  start_armed: false
+  dry_run: true
+  debounce_frames: 4
+  cooldown_seconds: 0.75
+  confidence_threshold: 0.70
+  volume_step_threshold: 0.04
+  cursor_smoothing: 0.35
+  mapping:
+    swipe_left: "prev_slide"
+    swipe_right: "next_slide"
+    fist: "play_pause"
+    pinch_vertical: "volume"
+    cursor_pinch: "click"
