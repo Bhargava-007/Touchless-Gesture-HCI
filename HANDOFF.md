@@ -1,11 +1,11 @@
 # Human Handoff
 
 ## Current State
-- **Phase 4 (`v0.4.0`)**: `GestureMLP`, deterministic training CLI (`tghci.train`), and `GestureClassifier` inference helper implemented and smoke-tested on synthetic data (CPU and CUDA).
+- **Phase 5 (`v0.5.0`)**: Rule-based swipe detector (`tghci.swipe`) and safety-first action mapper (`tghci.actions`) implemented and tested with `FakeBackend`.
 
 ## Verified vs Not Verified
-- **Verified:** PyTorch CUDA matmul + 5-step `nn.Linear` training on RTX 5050 (`sm_120`); MediaPipe `HandLandmarker` (`1.2.3`); 68-D feature normalisation; session CSV validation & split; synthetic end-to-end training + inference on CPU and CUDA (`pytest`, `ruff`).
-- **Not Yet Implemented / Verified:** Phases 5–8 (swipe/actions, live app, benchmark, evaluation); **Human Gate 1** (real webcam data collection).
+- **Verified:** PyTorch CUDA matmul + 5-step `nn.Linear` training on RTX 5050 (`sm_120`); MediaPipe `HandLandmarker` (`1.2.3`); 68-D feature normalisation; session CSV validation & split; synthetic CPU/CUDA training; swipe trajectories and safety-first action gating (`pytest`, `ruff`).
+- **Not Yet Implemented / Verified:** Phases 6–8 (live app/overlay, benchmark, evaluation); **Human Gate 1** (real webcam data collection); **Human Gate 2** (live demo).
 
 ## Human Gates (Pending)
 1. **Human Gate 1 — Real Data Collection (Phase 3):** Record multi-session webcam landmark data (`python -m tghci.collect`).

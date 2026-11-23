@@ -6,8 +6,14 @@
 3. `pinch`: Thumb tip (landmark 4) and index fingertip (landmark 8) brought together.
 4. `neutral`: Relaxed or transitional hand poses not corresponding to any command.
 
-## Dynamic Heuristic Gestures
-- `swipe_left` / `swipe_right`: Detected by `tghci.swipe` from rapid horizontal displacement of the hand centre over a short frame window.
+## Dynamic Heuristic Gestures (`tghci.swipe`)
+`swipe_left` and `swipe_right` are detected by a **rule-based heuristic** (not a learned model) over a sliding window of `window_size` hand-centre observations $(x_t, y_t, t)$:
+- Horizontal displacement $|\Delta x| \ge \text{min\_travel\_norm}$
+- Horizontal velocity $|\Delta x| / \Delta t \ge \text{min\_velocity\_norm}$
+- Vertical dominance guard $|\Delta y| / |\Delta x| \le \text{max\_vertical\_ratio}$
+- Refractory period $\text{refractory\_seconds}$ after each trigger
+
+All thresholds are configured in `configs/default.yaml`.
 
 ## Feature Normalisation Formula (`tghci.features`)
 Given raw 3D landmarks $P \in \mathbb{R}^{21 \times 3}$:

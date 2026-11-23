@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-24
+### Added
+- `tghci.swipe.SwipeDetector` rule-based horizontal swipe heuristic with refractory period.
+- `tghci.actions.ActionMapper` with disarmed-by-default safety, dry-run mode, debounce, cooldown, media/cursor modes, and injectable `ActionBackend`.
+- Unit tests in `tests/test_swipe_actions.py` using synthetic trajectories and `FakeBackend`.
+
 ## [0.4.0] - 2026-11-24
 ### Added
 - `tghci.model.GestureMLP`, checkpoint save/load with sidecar `.meta.json`, and `GestureClassifier` inference helper.
