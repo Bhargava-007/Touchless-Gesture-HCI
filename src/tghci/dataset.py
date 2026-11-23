@@ -122,7 +122,7 @@ def split_by_session(
         )
 
     rng = np.random.default_rng(seed)
-    shuffled = list(rng.permutation(session_ids))
+    shuffled = [str(s) for s in rng.permutation(session_ids)]
 
     n_test = max(1, int(round(n_sessions * test_fraction)))
     n_val = max(1, int(round(n_sessions * val_fraction)))
