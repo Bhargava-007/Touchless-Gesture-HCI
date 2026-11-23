@@ -4,6 +4,13 @@ Newest entries first. Every real error or dead end encountered during developmen
 
 ---
 
+## 2026-11-24 — Phase 4: `torch.load(..., weights_only=True)` rejected `TorchVersion` and `np.str_` in checkpoint metadata
+- **Phase:** Phase 4 (`feat/classifier`)
+- **Symptom:** `_pickle.UnpicklingError: Weights only load failed ... Unsupported global: GLOBAL torch.torch_version.TorchVersion` and `numpy._core.multiarray.scalar`.
+- **Root Cause:** `torch.__version__` (`TorchVersion`) and `np.random.Generator.permutation(session_ids)` (`np.str_`) are subclasses/scalars rather than plain Python primitives, so saving them inside checkpoint `metadata` caused `torch.load(..., weights_only=True)` to reject the pickle.
+- **Fix / Workaround:** Cast `str(torch.__version__)` in `tghci.train`, `[str(s) for s in rng.permutation(...)]` in `tghci.dataset`, and sanitise `metadata` via `json.loads(json.dumps(metadata))` in `tghci.model.save_checkpoint`.
+- **Evidence:** `.venv\Scripts\python.exe -m pytest -q` passed on both `cpu` and `cuda`.
+
 ## 2026-11-24 — Phase 0: `git -C .. status` access error inside IDE sandbox
 - **Phase:** Phase 0 (Probe)
 - **Symptom:** `fatal: error reading 'C:/Users/bharg/Downloads/College/DL-AC-2-2/.git'`

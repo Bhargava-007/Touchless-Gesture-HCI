@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-24
+### Added
+- `tghci.model.GestureMLP`, checkpoint save/load with sidecar `.meta.json`, and `GestureClassifier` inference helper.
+- `tghci.train` deterministic training CLI (`--config`, `--device`, `--seed`) with class weights, early stopping, and `results/train_log.csv` logging.
+- End-to-end synthetic training + inference smoke tests on CPU and CUDA in `tests/test_classifier.py`.
+
 ## [0.3.0] - 2026-11-24
 ### Added
 - `tghci.collect` interactive webcam landmark recorder writing per-session CSVs to `data/raw/`.
