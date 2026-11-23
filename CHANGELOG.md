@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-24
+### Added
+- `tghci.benchmark` CPU vs CUDA inference latency benchmark with warmup, `torch.cuda.synchronize()`, and CSV export (`results/benchmark_20261124_035254.csv`).
+- `tghci.evaluate` held-out session evaluation, per-gesture precision/recall/F1 CSV, and confusion matrix PNG generation.
+- Measured latency table in `docs/RESULTS.md` and synthetic code-path tests in `tests/test_bench_eval.py`.
+
 ## [0.6.0] - 2026-11-24
 ### Added
 - `tghci.overlay` pure OpenCV HUD and hand landmark rendering utilities.
