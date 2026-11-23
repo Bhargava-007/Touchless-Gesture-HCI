@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-24
+### Added
+- `tghci.overlay` pure OpenCV HUD and hand landmark rendering utilities.
+- `tghci.app` real-time pipeline loop with keyboard controls (`q`, `a`, `d`, `m`), graceful camera/checkpoint/GPU handling, and injectable test seams.
+- Unit tests in `tests/test_app.py` verifying overlay rendering and fake-source loop execution.
+
 ## [0.5.0] - 2026-11-24
 ### Added
 - `tghci.swipe.SwipeDetector` rule-based horizontal swipe heuristic with refractory period.
