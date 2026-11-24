@@ -11,9 +11,9 @@
 - **Consequences:** Native Windows 11 CUDA execution works without WSL2 or Docker, and `sm_120` is supported on recent PyTorch CUDA 12.8+ builds.
 
 ## ADR-003: MediaPipe Tasks `HandLandmarker` API (VIDEO / IMAGE Modes)
-- **Context:** Recent `mediapipe` releases (`>=1.2`) removed the legacy `mediapipe.solutions` namespace.
+- **Context:** In the installed `mediapipe 1.2.3` package, `hasattr(mp, 'solutions')` is `False` (the legacy `mediapipe.solutions` namespace is not present).
 - **Decision:** Use `mediapipe.tasks.python.vision.HandLandmarker` with the official `hand_landmarker.task` float16 model bundle, defaulting to `VIDEO` mode for sequential webcam/video frames (temporal tracking) and supporting `IMAGE` mode for independent still frames.
-- **Consequences:** Compatible with modern MediaPipe on Python 3.13; requires downloading `hand_landmarker.task` into `models/` (gitignored) and passing monotonic `timestamp_ms` in `VIDEO` mode.
+- **Consequences:** Works on Python 3.13.16 with `mediapipe 1.2.3`; requires downloading `hand_landmarker.task` into `models/` (gitignored) and passing monotonic `timestamp_ms` in `VIDEO` mode.
 
 ## ADR-004: Explicit `neutral` Gesture Class
 - **Context:** During live webcam use, the user's hand is often visible in relaxed or transitional poses that are not intended as commands.
@@ -34,3 +34,8 @@
 - **Context:** Sending OS-level keyboard/mouse events from a live camera risks unintended clicks or keystrokes.
 - **Decision:** Start disarmed (`start_armed: false`), enable `dry_run: true` by default, require `N`-frame debounce and per-action cooldown, keep `pyautogui.FAILSAFE = True`, and never act when no hand is tracked.
 - **Consequences:** Safe to test and demo; user must explicitly press `a` (arm) and `d` (disable dry-run) to send real OS events.
+
+## ADR-008: Python 3.13.16 Environment (No Python 3.12 Fallback Needed)
+- **Context:** The plan allowed falling back to Python 3.12 if `mediapipe` lacked a Python 3.13 wheel.
+- **Decision:** Keep `.venv` on Python `3.13.16`, because `mediapipe 1.2.3` installed cleanly on Python 3.13 once package installs ran with the sandbox bypassed (`BypassSandbox: true`).
+- **Consequences:** Single Python 3.13.16 environment for all dependencies (`mediapipe 1.2.3`, `torch 2.11.0+cu128`).
