@@ -4,6 +4,27 @@ Newest entries first. Every real error or dead end encountered during developmen
 
 ---
 
+## 2026-11-24 — Phase 7: `ruff check .` failed with `I001` in `tests\test_bench_eval.py`
+- **Phase:** Phase 7 (`feat/bench-eval`)
+- **Symptom:** `I001 [*] Import block is un-sorted or un-formatted` at `tests\test_bench_eval.py:3:1`.
+- **Root Cause:** Local test import `from tests.test_classifier import _write_synthetic_dataset` was placed after `tghci` imports.
+- **Fix / Workaround:** Sorted imports in `tests/test_bench_eval.py`.
+- **Evidence:** `.venv\Scripts\python.exe -m ruff check .` printed `All checks passed!`.
+
+## 2026-11-24 — Phase 6: `ruff check .` failed with `I001` in `tests\test_app.py`
+- **Phase:** Phase 6 (`feat/app`)
+- **Symptom:** `I001 [*] Import block is un-sorted or un-formatted` at `tests\test_app.py:3:1`.
+- **Root Cause:** Local test import `from tests.test_swipe_actions import FakeBackend` was placed after `tghci` imports.
+- **Fix / Workaround:** Sorted imports in `tests/test_app.py`.
+- **Evidence:** `.venv\Scripts\python.exe -m ruff check .` printed `All checks passed!`.
+
+## 2026-11-24 — Phase 1: `pip install mediapipe` failed on DNS resolution inside sandbox
+- **Phase:** Phase 1 (`chore/scaffold`)
+- **Symptom:** `Failed to resolve 'pypi.org' ([Errno 11001] getaddrinfo failed)` and `ERROR: No matching distribution found for mediapipe`.
+- **Root Cause:** Sandbox network restriction blocked PyPI DNS resolution (not a missing wheel).
+- **Fix / Workaround:** Package installs were re-run outside the sandbox (`BypassSandbox: true`), which installed `mediapipe 1.2.3` on Python `3.13.16`.
+- **Evidence:** `.venv\Scripts\python.exe -c "import mediapipe as mp; print(mp.__version__, hasattr(mp,'solutions'))"` printed `1.2.3 False`.
+
 ## 2026-11-24 — Phase 4: `torch.load(..., weights_only=True)` rejected `TorchVersion` and `np.str_` in checkpoint metadata
 - **Phase:** Phase 4 (`feat/classifier`)
 - **Symptom:** `_pickle.UnpicklingError: Weights only load failed ... Unsupported global: GLOBAL torch.torch_version.TorchVersion` and `numpy._core.multiarray.scalar`.
