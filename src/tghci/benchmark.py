@@ -25,7 +25,14 @@ def _git_commit_hash() -> str:
             text=True,
             check=True,
         )
-        return res.stdout.strip()
+        commit = res.stdout.strip()
+        dirty = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return f"{commit}-dirty" if dirty.stdout.strip() else commit
     except Exception:
         return "unknown"
 

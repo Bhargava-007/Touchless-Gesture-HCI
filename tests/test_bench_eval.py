@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+from unittest.mock import MagicMock
 
 from tests.test_classifier import _write_synthetic_dataset
 
-from tghci.benchmark import run_benchmark
+from tghci.benchmark import _git_commit_hash, run_benchmark
 from tghci.evaluate import evaluate_model
 from tghci.train import train_model
 
@@ -55,3 +56,14 @@ def test_evaluate_synthetic_code_path(tmp_path: Path) -> None:
     assert Path(meta["eval_csv"]).is_file()
     assert Path(meta["confusion_counts_png"]).is_file()
     assert Path(meta["confusion_norm_png"]).is_file()
+
+
+def test_git_commit_hash_flags_dirty_tree(monkeypatch) -> None:
+    """_git_commit_hash appends -dirty when git status --porcelain is non-empty."""
+    def _fake_run(cmd, **_kwargs):
+        mock = MagicMock()
+        mock.stdout = "abc1234\n" if cmd[1] == "rev-parse" else " M file.py\n"
+        return mock
+
+    monkeypatch.setattr("tghci.benchmark.subprocess.run", _fake_run)
+    assert _git_commit_hash() == "abc1234-dirty"
