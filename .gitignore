@@ -31,3 +31,6 @@ results/figures/*.png
 .env
 Thumbs.db
 .DS_Store
+
+# Local-only working notes
+.private/

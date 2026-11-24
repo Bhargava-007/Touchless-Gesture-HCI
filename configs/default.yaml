@@ -3,7 +3,6 @@
 paths:
   hand_model: "models/hand_landmarker.task"
   raw_data_dir: "data/raw"
-  processed_data_dir: "data/processed"
   checkpoint_path: "models/gesture_mlp.pt"
   train_log_csv: "results/train_log.csv"
   results_dir: "results"
