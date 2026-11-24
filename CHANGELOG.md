@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-11-24
+### Fixed
+- `ERRORLOG.md` updated with Phase 1 DNS/sandbox install, Phase 6, and Phase 7 `ruff` `I001` entries.
+- `DECISIONS.md` ADR-003 corrected to match `mediapipe 1.2.3` (`hasattr(mp, 'solutions') == False`) and ADR-008 added for Python 3.13.16.
+- `docs/RESULTS.md` clarified benchmark scope (forward pass only), provenance (`85d563b` dirty tree), and CPU thread count (`8`).
+- `tghci.benchmark._git_commit_hash` now appends `-dirty` when `git status --porcelain` is non-empty, with unit test.
+
 ## [0.8.0] - 2026-11-24
 ### Added
 - Complete `README.md` with setup, CLI usage, safety controls, and honest verification status.
