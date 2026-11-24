@@ -49,9 +49,36 @@ python -m tghci.app --device cuda
 - `configs/default.yaml`: Hyperparameters, swipe thresholds, safety defaults, and key mappings.
 - `scripts/download_hand_model.py`: Official MediaPipe `hand_landmarker.task` downloader with SHA256 verification.
 - `tests/`: Automated unit and synthetic integration tests (`pytest`).
-- `docs/`: Course PDFs and technical docs (`ARCHITECTURE.md`, `GESTURES.md`, `DATA.md`, `RESULTS.md`).
-- `data/processed/`, `models/`, `results/`: Processed data, local model assets/checkpoints (gitignored), and measured CSV/figure outputs.
+- `docs/`: course PDFs; `notes/`: architecture, data protocol, gesture definitions and measured results.
+- `models/`, `results/`: local model assets/checkpoints (gitignored) and measured CSV/figure outputs.
+
+## Project Documentation
+- Course deliverables (proposal abstract and review slides PDFs) live in `docs/`.
+- Technical notes (`ARCHITECTURE.md`, `DATA.md`, `GESTURES.md`, `RESULTS.md`) live in `notes/`.
+
+## Human Gates
+
+### Human Gate 1 — Real Data Collection
+Each team member should record at least 3 independent sessions (minimum 9 total) across varied lighting and distances:
+```powershell
+.\.venv\Scripts\python.exe -m tghci.collect
+```
+Press `1`–`4` (`open_palm`, `fist`, `pinch`, `neutral`), `Space` to pause, `q` to save session CSV to `data/raw/`.
+
+### Human Gate 2 — Live Webcam Demo
+After training a checkpoint (see Human Gate 3):
+```powershell
+.\.venv\Scripts\python.exe -m tghci.app --device cuda
+```
+Starts disarmed in dry-run mode. Press `a` to arm, `d` to toggle live actions, `m` to switch `media`/`cursor` mode, `q` to quit.
+
+### Human Gate 3 — Train, Evaluate, and Re-Benchmark on Real Data
+```powershell
+.\.venv\Scripts\python.exe -m tghci.train --device cuda --seed 42
+.\.venv\Scripts\python.exe -m tghci.evaluate --device cpu --seed 42
+.\.venv\Scripts\python.exe -m tghci.benchmark --checkpoint models\gesture_mlp.pt --iterations 1000
+```
 
 ## Current Status & Limitations
 - All code modules, unit tests, synthetic training/evaluation smoke tests, and the CPU vs GPU latency benchmark (`results/benchmark_20261124_035254.csv`) are implemented and verified.
-- Real webcam data collection, real-data model training/evaluation, and live webcam demoing require human interaction (**Human Gates 1–3** in `HANDOFF.md`).
+- Real webcam data collection, real-data model training/evaluation, and live webcam demoing require human interaction (**Human Gates 1–3** above).
