@@ -16,7 +16,11 @@ Source CSV: `results/benchmark_20261124_035254.csv` (random-initialised `Gesture
 | cuda | 64 | 1000 | 0.1412 | 0.1323 | 0.1923 | 0.2208 | 453359.6 |
 | cuda | 512 | 1000 | 0.1302 | 0.1233 | 0.1680 | 0.2111 | 3933369.3 |
 
-**Observation:** For this tiny MLP (`68 -> 128 -> 64 -> 4`), CPU inference is faster than CUDA at all tested batch sizes (1, 8, 64, 512), because tiny MLP inference is kernel-launch-overhead bound on the GPU.
+**Observation:** Observed CPU faster than CUDA at all four batch sizes (1, 8, 64, 512); the cause was not measured here and GPU kernel-launch overhead is an untested hypothesis.
+
+**What is measured:** `benchmark_device` allocates `x = torch.randn(batch_size, input_dim, dtype=torch.float32, device=device)` once before the warm-up and timed loops, so the timed loop measures `model(x)` forward pass only (plus `torch.cuda.synchronize()` on CUDA). Host-to-device transfer, output readback, feature preprocessing, and MediaPipe landmark inference are not included.
+
+**Provenance & Threads:** In `results/benchmark_20261124_035254.csv`, `git_commit` (`85d563b40a5a6e710d8102e8327ced4daec8f971`) is the base commit before the benchmark code was committed (working tree was dirty); the CSV itself is unchanged. PyTorch CPU thread count on this machine: `torch.get_num_threads() = 8`.
 
 ## Held-Out Test Set Evaluation
 _PENDING: requires human-collected data (Human Gate 1 & Human Gate 3)._
