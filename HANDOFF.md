@@ -42,3 +42,4 @@ Then update `docs/RESULTS.md` with the measured evaluation table and tag `v1.0.0
 - `py -0p` does not list per-user Python installs in this environment; invoke `.venv\Scripts\python.exe` directly.
 - `git -C .. status` fails inside the IDE sandbox due to parent `.git` permissions; run all git commands inside `Project-TG-HCI` only.
 - `git remote` push URL is set to `DISABLED` to prevent accidental pushes.
+- `pip check` reports no broken requirements (`opencv-python` and `opencv-contrib-python` are both `5.1.0.95` with no conflict).
