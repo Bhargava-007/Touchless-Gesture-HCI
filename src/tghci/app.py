@@ -122,10 +122,10 @@ def run_app(
                 )
                 if feats is not None:
                     label, conf = classifier.predict(feats)
-                    centre_x = float((det.landmarks[0, 0] + det.landmarks[9, 0]) * 0.5)
+                    centre_x = 1.0 - float((det.landmarks[0, 0] + det.landmarks[9, 0]) * 0.5)
                     centre_y = float((det.landmarks[0, 1] + det.landmarks[9, 1]) * 0.5)
                     swipe_ev = swipe.update(centre_x, centre_y, now_perf)
-                    index_xy = (float(det.landmarks[8, 0]), float(det.landmarks[8, 1]))
+                    index_xy = (1.0 - float(det.landmarks[8, 0]), float(det.landmarks[8, 1]))
                     mapper.step(
                         hand_present=True,
                         gesture_label=label,
@@ -135,7 +135,8 @@ def run_app(
                         hand_y=centre_y,
                         index_tip_xy=index_xy,
                     )
-                    lm_draw = det.landmarks
+                    lm_draw = det.landmarks.copy()
+                    lm_draw[:, 0] = 1.0 - lm_draw[:, 0]
                 else:
                     label, conf, lm_draw = "none", 0.0, None
                     swipe.update(None, None, now_perf)
@@ -155,7 +156,8 @@ def run_app(
                 last_action=mapper.last_action_label,
                 device=device,
             )
-            rendered = draw_overlay(frame, hud, landmarks=lm_draw)
+            display_frame = cv2.flip(frame, 1)
+            rendered = draw_overlay(display_frame, hud, landmarks=lm_draw)
 
             if display:
                 cv2.imshow("Touchless Gesture HCI", rendered)

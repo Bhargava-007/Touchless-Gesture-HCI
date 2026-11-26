@@ -26,6 +26,9 @@ class PyAutoGuiBackend:
         import pyautogui
 
         pyautogui.FAILSAFE = True
+        pyautogui.PAUSE = 0.0
+        if hasattr(pyautogui, "MINIMUM_DURATION"):
+            pyautogui.MINIMUM_DURATION = 0.0
         self._pag = pyautogui
         self._screen_w, self._screen_h = pyautogui.size()
 
@@ -35,7 +38,11 @@ class PyAutoGuiBackend:
     def move_cursor_norm(self, x_norm: float, y_norm: float) -> None:
         x_clamped = min(max(float(x_norm), 0.0), 1.0)
         y_clamped = min(max(float(y_norm), 0.0), 1.0)
-        self._pag.moveTo(x_clamped * self._screen_w, y_clamped * self._screen_h)
+        max_x = max(self._screen_w - 3, 2)
+        max_y = max(self._screen_h - 3, 2)
+        target_x = 2.0 + x_clamped * (max_x - 2)
+        target_y = 2.0 + y_clamped * (max_y - 2)
+        self._pag.moveTo(target_x, target_y)
 
     def click(self) -> None:
         self._pag.click()
@@ -62,6 +69,8 @@ class ActionMapper:
         cooldown_seconds: float = 0.75,
         confidence_threshold: float = 0.70,
         volume_step_threshold: float = 0.04,
+        cursor_smoothing: float = 0.35,
+        cursor_active_margin: float = 0.15,
     ) -> None:
         self.backend: ActionBackend = backend if backend is not None else PyAutoGuiBackend()
         self.armed = bool(start_armed)
@@ -70,12 +79,15 @@ class ActionMapper:
         self.cooldown_seconds = float(cooldown_seconds)
         self.confidence_threshold = float(confidence_threshold)
         self.volume_step_threshold = float(volume_step_threshold)
+        self.cursor_smoothing = min(max(float(cursor_smoothing), 0.05), 1.0)
+        self.cursor_active_margin = min(max(float(cursor_active_margin), 0.0), 0.45)
         self.mode = "media"  # "media" or "cursor"
 
         self._last_label: str | None = None
         self._streak = 0
         self._last_action_time: dict[str, float] = {}
         self._pinch_anchor_y: float | None = None
+        self._cursor_pos: tuple[float, float] | None = None
         self.last_action_label: str = "none"
 
     @classmethod
@@ -92,6 +104,8 @@ class ActionMapper:
             cooldown_seconds=float(ac.get("cooldown_seconds", 0.75)),
             confidence_threshold=float(ac.get("confidence_threshold", 0.70)),
             volume_step_threshold=float(ac.get("volume_step_threshold", 0.04)),
+            cursor_smoothing=float(ac.get("cursor_smoothing", 0.35)),
+            cursor_active_margin=float(ac.get("cursor_active_margin", 0.15)),
         )
 
     def toggle_armed(self) -> bool:
@@ -99,6 +113,7 @@ class ActionMapper:
         self.armed = not self.armed
         self._streak = 0
         self._pinch_anchor_y = None
+        self._cursor_pos = None
         return self.armed
 
     def toggle_dry_run(self) -> bool:
@@ -111,7 +126,22 @@ class ActionMapper:
         self.mode = "cursor" if self.mode == "media" else "media"
         self._streak = 0
         self._pinch_anchor_y = None
+        self._cursor_pos = None
         return self.mode
+
+    def _map_and_smooth_cursor(self, x_raw: float, y_raw: float) -> tuple[float, float]:
+        """Map active camera ROI to [0, 1] and apply EMA smoothing."""
+        m = self.cursor_active_margin
+        span = max(1.0 - 2.0 * m, 1e-6)
+        tx = min(max((float(x_raw) - m) / span, 0.0), 1.0)
+        ty = min(max((float(y_raw) - m) / span, 0.0), 1.0)
+        if self._cursor_pos is None:
+            self._cursor_pos = (tx, ty)
+        else:
+            alpha = self.cursor_smoothing
+            px, py = self._cursor_pos
+            self._cursor_pos = (alpha * tx + (1.0 - alpha) * px, alpha * ty + (1.0 - alpha) * py)
+        return self._cursor_pos
 
     def _can_fire(self, action_name: str, now: float) -> bool:
         last = self._last_action_time.get(action_name, -1e9)
@@ -141,17 +171,17 @@ class ActionMapper:
             self._last_label = None
             self._streak = 0
             self._pinch_anchor_y = None
+            self._cursor_pos = None
             return None
 
         if not self.armed:
             self._streak = 0
             self._pinch_anchor_y = None
+            self._cursor_pos = None
             return None
 
-        # Cursor mode: move pointer from index fingertip and click on debounced pinch.
+        # Cursor mode: move pointer from index fingertip (frozen during pinch debounce) and click.
         if self.mode == "cursor":
-            if index_tip_xy is not None and not self.dry_run:
-                self.backend.move_cursor_norm(index_tip_xy[0], index_tip_xy[1])
             if gesture_label == "pinch" and confidence >= self.confidence_threshold:
                 self._streak = self._streak + 1 if self._last_label == "pinch" else 1
                 self._last_label = "pinch"
@@ -161,6 +191,10 @@ class ActionMapper:
             else:
                 self._last_label = gesture_label
                 self._streak = 0
+                if index_tip_xy is not None:
+                    sx, sy = self._map_and_smooth_cursor(index_tip_xy[0], index_tip_xy[1])
+                    if not self.dry_run:
+                        self.backend.move_cursor_norm(sx, sy)
             return None
 
         # Media mode: swipes take priority over static holds.
