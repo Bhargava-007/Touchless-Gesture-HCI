@@ -123,10 +123,49 @@ def test_action_mapper_safety_defaults_debounce_cooldown_and_modes() -> None:
     assert ev_vol is not None and ev_vol.action == "volume_up" and ev_vol.executed
     assert backend.keys == ["playpause", "volumeup"]
 
-    # Switch to cursor mode: moves pointer and pinch clicks after debounce
+    # Switch to cursor mode: moves pointer on non-pinch, freezes during pinch debounce
     assert mapper.toggle_mode() == "cursor"
+    mapper.step(True, "open_palm", 0.95, 39.9, index_tip_xy=(0.5, 0.5))
+    moves_before_pinch = len(backend.moves)
+    assert moves_before_pinch == 1
     for i in range(3):
         ev_click = mapper.step(True, "pinch", 0.95, 40.0 + i * 0.1, index_tip_xy=(0.4, 0.6))
     assert ev_click is not None and ev_click.action == "click" and ev_click.executed
     assert backend.clicks == 1
-    assert len(backend.moves) == 3
+    assert len(backend.moves) == moves_before_pinch
+
+
+def test_cursor_smoothing_active_margin_and_pinch_freeze() -> None:
+    """Verify ROI active-margin mapping, EMA smoothing, state reset, and pinch freeze."""
+    backend = FakeBackend()
+    mapper = ActionMapper(
+        backend=backend,
+        start_armed=True,
+        dry_run=False,
+        debounce_frames=3,
+        cooldown_seconds=0.5,
+        cursor_smoothing=0.5,
+        cursor_active_margin=0.15,
+    )
+    assert mapper.toggle_mode() == "cursor"
+
+    # Below margin (0.10 <= 0.15) clamps to 0.0; above 0.85 clamps to 1.0
+    mapper.step(True, "open_palm", 0.95, 1.0, index_tip_xy=(0.10, 0.90))
+    assert backend.moves[-1] == (0.0, 1.0)
+
+    # Target at (0.85, 0.15) -> ROI mapped to (1.0, 0.0); EMA alpha=0.5 -> (0.5, 0.5)
+    mapper.step(True, "open_palm", 0.95, 1.1, index_tip_xy=(0.85, 0.15))
+    assert abs(backend.moves[-1][0] - 0.5) < 1e-6
+    assert abs(backend.moves[-1][1] - 0.5) < 1e-6
+
+    # Pinch freezes cursor movement while building click debounce
+    moves_count = len(backend.moves)
+    mapper.step(True, "pinch", 0.95, 1.2, index_tip_xy=(0.20, 0.20))
+    mapper.step(True, "pinch", 0.95, 1.3, index_tip_xy=(0.25, 0.25))
+    assert len(backend.moves) == moves_count
+    assert backend.clicks == 0
+
+    # Losing hand tracking resets EMA state so next frame snaps without old history
+    mapper.step(False, None, 0.0, 1.4)
+    mapper.step(True, "open_palm", 0.95, 1.5, index_tip_xy=(0.85, 0.15))
+    assert backend.moves[-1] == (1.0, 0.0)

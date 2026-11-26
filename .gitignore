@@ -21,6 +21,7 @@ checkpoints/
 *.pt
 *.pth
 models/*.task
+models/*.meta.json
 
 # Raw data and generated plots (keep docs/, data/processed/, results/*.csv)
 data/raw/
