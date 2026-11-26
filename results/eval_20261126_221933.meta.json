@@ -1,0 +1,22 @@
+{
+  "git_commit": "f24efd0bbf4ae676619b94f110758091a5fed317",
+  "timestamp": "20261126_221933",
+  "checkpoint": "models\\gesture_mlp.pt",
+  "overall_accuracy": 0.702286282306163,
+  "test_sessions": [
+    "sess_20261126_221452_1a06ce"
+  ],
+  "data_summary": {
+    "total_rows": 4999,
+    "num_sessions": 5,
+    "class_counts": {
+      "pinch": 1934,
+      "fist": 1376,
+      "neutral": 958,
+      "open_palm": 731
+    }
+  },
+  "eval_csv": "results\\eval_20261126_221933.csv",
+  "confusion_counts_png": "results\\figures\\confusion_counts.png",
+  "confusion_norm_png": "results\\figures\\confusion_norm.png"
+}

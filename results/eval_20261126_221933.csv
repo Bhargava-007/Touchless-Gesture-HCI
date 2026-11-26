@@ -1,0 +1,5 @@
+gesture,precision,recall,f1,support,overall_accuracy
+open_palm,0.3847,0.8728,0.5341,283,0.7023
+fist,0.9212,0.7946,0.8532,662,0.7023
+pinch,0.8812,0.6334,0.7370,761,0.7023
+neutral,0.6270,0.5163,0.5663,306,0.7023
